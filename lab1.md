@@ -150,13 +150,6 @@
 
 - `fulltext=1` - режим “показать результаты поиска” (полнотекстовый поиск).
 
-#### Наблюдение
-Во время поиска также встречался запрос:
-- POST `https://en.wikipedia.org/beacon/statsv?Search.FullTextResults=1147ms`
-- **Status Code:** 204 No Content` 
-Это не запрос получения результатов.
-
-
 ---
 
 ## Задание 3. Анализ HTTP-запроса (сайт на выбор: YouTube)
@@ -174,7 +167,7 @@
 ### Query Parameters
 - `search_query=cat` — строка поиска, по которой формируются результаты.
 
-### Заголовки ответа (замеченные на скриншоте)
+### Заголовки ответа
 - `content-encoding: br` — сжатие Brotli.
 - `content-type: text/html; charset=utf-8` — сервер вернул HTML документ.
 - `cache-control: no-cache, no-store, max-age=0, must-revalidate` — строгие правила хранения/переиспользования (динамический контент).
@@ -285,4 +278,5 @@ Location: /cars/42
 * **403 Forbidden** — авторизация есть, но прав на операцию нет.
 * **404 Not Found** — endpoint не существует на указанном хосте или неверный путь.
 * **500 Internal Server Error** — ошибка на стороне сервера.
+
 
