@@ -133,7 +133,7 @@
 **Страница:** https://en.wikipedia.org/wiki/Special:Search  
 **Действие:** поиск (пример) по слову browser
 
-#### 1) URL запроса (запрос страницы результатов поиска)
+#### URL запроса (запрос страницы результатов поиска)
 
 `https://en.wikipedia.org/w/index.php?search=intitle%3Abrowser&title=Special%3ASearch&profile=advanced&fulltext=1&advancedSearch-current=%7B%22fields%22%3A%7B%22intitle%22%3A%22browser%22%7D%7D&ns0=1`
 
