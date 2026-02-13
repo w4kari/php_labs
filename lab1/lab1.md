@@ -185,9 +185,6 @@ Host: sandbox.usm.com
 User-Agent: Daria Burteva
 ```
 
-````markdown
-
-
 ### 4.2. Что такое User-Agent и для чего он используется?
 
 **User-Agent** — это HTTP-заголовок, который сообщает серверу информацию о клиенте.
