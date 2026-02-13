@@ -244,7 +244,6 @@ Host: sandbox.usm.com
 POST /cars HTTP/1.1
 Host: sandbox.com
 Content-Type: application/json
-User-Agent: John Doe
 
 model=Corolla&make=Toyota&year=2020
 ```
