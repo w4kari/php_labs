@@ -184,16 +184,7 @@ User-Agent: Daria Burteva
 ```
 
 ````markdown
-## Задание 4. Составление HTTP-запросов и контрольные вопросы
 
-### 4.1. GET-запрос на `http://sandbox.usm.com` с `User-Agent: Имя Фамилия`
-```http
-GET / HTTP/1.1
-Host: sandbox.usm.com
-User-Agent: Имя Фамилия
-Accept: */*
-Connection: close
-````
 
 ### 4.2. Что такое User-Agent и для чего он используется?
 
