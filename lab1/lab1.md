@@ -154,7 +154,9 @@
 
 ## Задание 3. Анализ HTTP-запроса (сайт на выбор: YouTube)
 
+
 ![](images/5.png)
+
 ![](images/6.png)
 
 **Выбран сайт:** https://www.youtube.com  
