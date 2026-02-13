@@ -201,7 +201,6 @@ User-Agent: Daria Burteva
 ```http
 POST /cars HTTP/1.1
 Host: sandbox.usm.com
-
 make=Toyota&model=Corolla&year=2020
 ```
 
@@ -223,7 +222,6 @@ make=Toyota&model=Corolla&year=2020
 ```http
 PUT /cars/1 HTTP/1.1
 Host: sandbox.usm.com
-
 {
   "make": "Toyota",
   "model": "Corolla",
@@ -244,7 +242,7 @@ Host: sandbox.usm.com
 POST /cars HTTP/1.1
 Host: sandbox.com
 Content-Type: application/json
-
+User-Agent: John Doe
 model=Corolla&make=Toyota&year=2020
 ```
 
@@ -254,7 +252,6 @@ model=Corolla&make=Toyota&year=2020
 HTTP/1.1 201 Created
 Content-Type: application/json
 Location: /cars/42
-
 {"id":42,"make":"Toyota","model":"Corolla","year":2020}
 ```
 
