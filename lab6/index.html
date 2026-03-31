@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог анекдотов</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f3f4f6, #dbeafe);
+            color: #1f2937;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 850px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background:#ab80c4;
+            color: white;
+            padding: 30px;
+        }
+
+        .card-header h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .card-header p {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #f9fafb;
+            transition: all 0.2s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #5e5075;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px #5e5075;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .hint {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #5e5075;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5e5075;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        .footer-note {
+            margin-top: 25px;
+            padding: 15px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #5e5075;
+        }
+
+        @media (max-width: 768px) {
+            .card-header h1 {
+                font-size: 26px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-body,
+            .card-header {
+                padding: 22px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="card">
+            <div class="card-header">
+                <h1>Каталог анекдотов</h1>
+            </div>
+
+            <div class="card-body">
+                <form action="save_joke.php" method="POST">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="title">Название анекдота</label>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                required
+                                minlength="3"
+                                maxlength="100"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="author">Автор / источник</label>
+                            <input
+                                type="text"
+                                id="author"
+                                name="author"
+                                required
+                                minlength="2"
+                                maxlength="100"
+                            >
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="content">Текст анекдота</label>
+                            <textarea
+                                id="content"
+                                name="content"
+                                required
+                                minlength="10"
+                                maxlength="2000"
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Категория</label>
+                            <select id="category" name="category" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="short">Короткий</option>
+                                <option value="family">Семейный</option>
+                                <option value="school">Школьный</option>
+                                <option value="work">Про работу</option>
+                                <option value="animals">Про животных</option>
+                                <option value="classic">Классический</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rating">Возрастной рейтинг</label>
+                            <select id="rating" name="rating" required>
+                                <option value="">Выберите рейтинг</option>
+                                <option value="0+">0+</option>
+                                <option value="12+">12+</option>
+                                <option value="16+">16+</option>
+                                <option value="18+">18+</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="publish_date">Дата публикации</label>
+                            <input
+                                type="date"
+                                id="publish_date"
+                                name="publish_date"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="created_at">Дата создания записи</label>
+                            <input
+                                type="date"
+                                id="created_at"
+                                name="created_at"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="updated_at">Дата обновления</label>
+                            <input
+                                type="date"
+                                id="updated_at"
+                                name="updated_at"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tags">Теги</label>
+                            <input
+                                type="text"
+                                id="tags"
+                                name="tags"
+                                maxlength="150"
+                            >
+                            <div class="hint">Укажите теги через запятую</div>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Сохранить анекдот</button>
+                        <a href="list_jokes.php" class="btn btn-secondary">Посмотреть каталог</a>
+                    </div>
+
+                    <div class="footer-note">
+                        Все поля, кроме тегов, обязательны для заполнения.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
