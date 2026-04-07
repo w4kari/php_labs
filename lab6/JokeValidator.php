@@ -3,48 +3,58 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/ValidatorInterface.php';
 
+if (!function_exists('mb_strlen')) {
+    /**
+     * Fallback for environments where mbstring is not loaded.
+     */
+    function mb_strlen(string $string, ?string $encoding = null): int
+    {
+        if ($string === '') {
+            return 0;
+        }
+
+        $result = preg_match_all('/./u', $string);
+
+        if ($result === false) {
+            return strlen($string);
+        }
+
+        return $result;
+    }
+}
+
 /**
  * Валидатор формы добавления анекдота.
  */
 class JokeValidator implements ValidatorInterface
 {
     /**
-     * Исходные данные формы.
-     *
      * @var array<string, mixed>
      */
     private array $data;
 
     /**
-     * Ошибки валидации.
-     *
      * @var array<string, array<int, string>>
      */
     private array $errors = [];
 
     /**
-     * Очищенные данные.
-     *
      * @var array<string, mixed>
      */
     private array $validated = [];
 
     /**
-     * Допустимые категории.
-     *
      * @var array<int, string>
      */
     private array $allowedCategories = ['short', 'family', 'school', 'work', 'animals', 'classic'];
 
     /**
-     * Допустимые возрастные рейтинги.
-     *
      * @var array<int, string>
      */
     private array $allowedRatings = ['0+', '12+', '16+', '18+'];
 
     /**
-     * @param array<string, mixed> $data Данные формы.
+     * @param array<string, mixed> $data
      */
     public function __construct(array $data)
     {
@@ -52,10 +62,8 @@ class JokeValidator implements ValidatorInterface
     }
 
     /**
-     * Очищает входные данные.
-     *
-     * @param array<string, mixed> $data Исходные данные.
-     * @return array<string, mixed> Очищенные данные.
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     private function sanitize(array $data): array
     {
@@ -68,36 +76,17 @@ class JokeValidator implements ValidatorInterface
         return $clean;
     }
 
-    /**
-     * Проверяет корректность даты в формате YYYY-MM-DD.
-     *
-     * @param string $date Проверяемая дата.
-     * @return bool Результат проверки.
-     */
     private function isValidDate(string $date): bool
     {
         $dateTime = \DateTime::createFromFormat('Y-m-d', $date);
-
         return $dateTime !== false && $dateTime->format('Y-m-d') === $date;
     }
 
-    /**
-     * Добавляет ошибку по полю.
-     *
-     * @param string $field Имя поля.
-     * @param string $message Текст ошибки.
-     * @return void
-     */
     private function addError(string $field, string $message): void
     {
         $this->errors[$field][] = $message;
     }
 
-    /**
-     * Запускает валидацию формы.
-     *
-     * @return bool True, если ошибок нет.
-     */
     public function validate(): bool
     {
         $title = (string)($this->data['title'] ?? '');
@@ -168,8 +157,6 @@ class JokeValidator implements ValidatorInterface
     }
 
     /**
-     * Возвращает ошибки валидации.
-     *
      * @return array<string, array<int, string>>
      */
     public function errors(): array
@@ -178,8 +165,6 @@ class JokeValidator implements ValidatorInterface
     }
 
     /**
-     * Возвращает очищенные данные после успешной валидации.
-     *
      * @return array<string, mixed>
      */
     public function validated(): array

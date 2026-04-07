@@ -4,10 +4,7 @@ declare(strict_types=1);
 header('Content-Type: text/html; charset=UTF-8');
 
 /**
- * Читает записи анекдотов из файла JSON Lines.
- *
- * @param string $filename Путь к файлу с данными.
- * @return array<int, array<string, string>> Массив записей.
+ * @return array<int, array<string, string>>
  */
 function readJokesFromFile(string $filename): array
 {
@@ -16,16 +13,13 @@ function readJokesFromFile(string $filename): array
     }
 
     $lines = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
     if ($lines === false) {
         return [];
     }
 
     $jokes = [];
-
     foreach ($lines as $line) {
         $decoded = json_decode($line, true);
-
         if (is_array($decoded)) {
             $jokes[] = $decoded;
         }
@@ -35,12 +29,8 @@ function readJokesFromFile(string $filename): array
 }
 
 /**
- * Сортирует массив анекдотов по указанному полю.
- *
- * @param array<int, array<string, string>> $jokes Массив записей.
- * @param string $sortBy Поле сортировки.
- * @param string $order Направление сортировки: asc или desc.
- * @return array<int, array<string, string>> Отсортированный массив.
+ * @param array<int, array<string, string>> $jokes
+ * @return array<int, array<string, string>>
  */
 function sortJokes(array $jokes, string $sortBy, string $order): array
 {
@@ -57,9 +47,7 @@ function sortJokes(array $jokes, string $sortBy, string $order): array
         function (array $a, array $b) use ($sortBy, $order): int {
             $valueA = $a[$sortBy] ?? '';
             $valueB = $b[$sortBy] ?? '';
-
             $result = strcmp((string)$valueA, (string)$valueB);
-
             return $order === 'desc' ? -$result : $result;
         }
     );
@@ -67,33 +55,21 @@ function sortJokes(array $jokes, string $sortBy, string $order): array
     return $jokes;
 }
 
-/**
- * Экранирует строку для безопасного вывода в HTML.
- *
- * @param string|null $value Исходное значение.
- * @return string Безопасная строка.
- */
 function e(?string $value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
-$sortBy = $_GET['sort'] ?? 'created_at';
-$order = $_GET['order'] ?? 'asc';
-
-$jokes = readJokesFromFile('data.txt');
-$jokes = sortJokes($jokes, $sortBy, $order);
-
-/**
- * Возвращает противоположное направление сортировки.
- *
- * @param string $currentOrder Текущее направление.
- * @return string Новое направление.
- */
 function toggleOrder(string $currentOrder): string
 {
     return strtolower($currentOrder) === 'asc' ? 'desc' : 'asc';
 }
+
+$sortBy = $_GET['sort'] ?? 'created_at';
+$order = $_GET['order'] ?? 'asc';
+
+$jokes = readJokesFromFile(__DIR__ . '/data.txt');
+$jokes = sortJokes($jokes, $sortBy, $order);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -135,10 +111,6 @@ function toggleOrder(string $currentOrder): string
             border-radius: 6px;
             margin-right: 10px;
             display: inline-block;
-        }
-
-        .actions a:hover {
-            background: #5e5075;
         }
 
         table {
@@ -189,16 +161,6 @@ function toggleOrder(string $currentOrder): string
             margin-bottom: 15px;
             color: #555;
         }
-
-        @media (max-width: 900px) {
-            table {
-                font-size: 14px;
-            }
-
-            th, td {
-                padding: 8px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -206,7 +168,7 @@ function toggleOrder(string $currentOrder): string
     <h1>Каталог анекдотов</h1>
 
     <div class="actions">
-        <a href="index.html">Добавить анекдот</a>
+        <a href="index.php">Добавить анекдот</a>
     </div>
 
     <p class="sort-info">
@@ -218,7 +180,7 @@ function toggleOrder(string $currentOrder): string
 
     <?php if (empty($jokes)): ?>
         <div class="empty">
-            Пока нет сохранённых анекдотов.
+            Пока нет сохраненных анекдотов.
         </div>
     <?php else: ?>
         <table>
