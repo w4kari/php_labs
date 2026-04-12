@@ -5,7 +5,7 @@ require_once __DIR__ . '/ValidatorInterface.php';
 
 if (!function_exists('mb_strlen')) {
     /**
-     * Fallback for environments where mbstring is not loaded.
+     * Резервная реализация для окружений без расширения mbstring.
      */
     function mb_strlen(string $string, ?string $encoding = null): int
     {
@@ -63,30 +63,81 @@ class JokeValidator implements ValidatorInterface
 
     /**
      * @param array<string, mixed> $data
-     * @return array<string, mixed>
+     * @return array<string, mixed> Очищенные данные формы.
      */
     private function sanitize(array $data): array
     {
         $clean = [];
 
         foreach ($data as $key => $value) {
-            $clean[$key] = is_string($value) ? trim($value) : $value;
+            if (is_string($value)) {
+                $clean[$key] = trim($value);
+                continue;
+            }
+
+            if (is_array($value)) {
+                $clean[$key] = array_map(
+                    static fn ($item) => is_string($item) ? trim($item) : $item,
+                    $value
+                );
+                continue;
+            }
+
+            $clean[$key] = $value;
         }
 
         return $clean;
     }
 
+    /**
+     * @param mixed $rawTags
+     * @return array<int, string> Нормализованный список тегов.
+     */
+    private function normalizeTags($rawTags): array
+    {
+        if (is_string($rawTags)) {
+            $rawTags = array_map('trim', explode(',', $rawTags));
+        }
+
+        if (!is_array($rawTags)) {
+            return [];
+        }
+
+        $tags = [];
+        foreach ($rawTags as $tag) {
+            if (!is_string($tag)) {
+                continue;
+            }
+
+            $trimmedTag = trim($tag);
+            if ($trimmedTag !== '') {
+                $tags[] = $trimmedTag;
+            }
+        }
+
+        return array_values(array_unique($tags));
+    }
+
+    /**
+     * Проверяет корректность даты в формате `Y-m-d`.
+     */
     private function isValidDate(string $date): bool
     {
         $dateTime = \DateTime::createFromFormat('Y-m-d', $date);
         return $dateTime !== false && $dateTime->format('Y-m-d') === $date;
     }
 
+    /**
+     * Добавляет сообщение об ошибке валидации для указанного поля.
+     */
     private function addError(string $field, string $message): void
     {
         $this->errors[$field][] = $message;
     }
 
+    /**
+     * Выполняет валидацию входных данных формы.
+     */
     public function validate(): bool
     {
         $title = (string)($this->data['title'] ?? '');
@@ -97,7 +148,7 @@ class JokeValidator implements ValidatorInterface
         $createdAt = (string)($this->data['created_at'] ?? '');
         $updatedAt = (string)($this->data['updated_at'] ?? '');
         $rating = (string)($this->data['rating'] ?? '');
-        $tags = (string)($this->data['tags'] ?? '');
+        $tags = $this->normalizeTags($this->data['tags'] ?? []);
 
         if ($title === '') {
             $this->addError('title', 'Название обязательно для заполнения.');
@@ -157,6 +208,8 @@ class JokeValidator implements ValidatorInterface
     }
 
     /**
+     * Возвращает ошибки валидации по полям формы.
+     *
      * @return array<string, array<int, string>>
      */
     public function errors(): array
@@ -165,6 +218,8 @@ class JokeValidator implements ValidatorInterface
     }
 
     /**
+     * Возвращает успешно провалидированные и очищенные данные.
+     *
      * @return array<string, mixed>
      */
     public function validated(): array

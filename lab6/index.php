@@ -4,6 +4,7 @@ declare(strict_types=1);
 header('Content-Type: text/html; charset=UTF-8');
 
 require_once __DIR__ . '/JokeValidator.php';
+require_once __DIR__ . '/ValidatorInterface.php';
 
 function e(string $value): string
 {
@@ -19,10 +20,10 @@ $fields = [
     'publish_date',
     'created_at',
     'updated_at',
-    'tags',
 ];
 
 $formData = array_fill_keys($fields, '');
+$formData['tags'] = ['', '', ''];
 $errors = [];
 $successMessage = '';
 
@@ -32,6 +33,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $formData[$field] = is_string($value) ? trim($value) : '';
     }
 
+    $rawTags = $_POST['tags'] ?? [];
+    if (!is_array($rawTags)) {
+        $rawTags = [$rawTags];
+    }
+
+    $preparedTags = [];
+    foreach ($rawTags as $tag) {
+        if (!is_string($tag)) {
+            continue;
+        }
+
+        $trimmedTag = trim($tag);
+        if ($trimmedTag !== '') {
+            $preparedTags[] = $trimmedTag;
+        }
+    }
+
+    while (count($preparedTags) < 3) {
+        $preparedTags[] = '';
+    }
+
+    $formData['tags'] = $preparedTags;
+
+    /** @var ValidatorInterface $validator Валидатор формы. */
     $validator = new JokeValidator($formData);
 
     if ($validator->validate()) {
@@ -47,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $successMessage = 'Анекдот успешно сохранен.';
                 $formData = array_fill_keys($fields, '');
+                $formData['tags'] = ['', '', ''];
             }
         }
     } else {
@@ -450,14 +476,17 @@ $ratings = ['0+', '12+', '16+', '18+'];
 
                     <div class="form-group">
                         <label for="tags">Теги</label>
-                        <input
-                            type="text"
-                            id="tags"
-                            name="tags"
-                            maxlength="150"
-                            value="<?= e($formData['tags']) ?>"
-                        >
-                        <div class="hint">Укажите теги через запятую</div>
+                        <?php foreach ($formData['tags'] as $index => $tag): ?>
+                            <input
+                                type="text"
+                                id="<?= $index === 0 ? 'tags' : 'tags_' . $index ?>"
+                                name="tags[]"
+                                maxlength="150"
+                                value="<?= e((string)$tag) ?>"
+                                style="<?= $index > 0 ? 'margin-top: 8px;' : '' ?>"
+                            >
+                        <?php endforeach; ?>
+                        <div class="hint">Каждый тег передается отдельным элементом массива `tags[]`.</div>
                     </div>
                 </div>
 

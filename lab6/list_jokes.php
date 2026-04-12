@@ -4,7 +4,9 @@ declare(strict_types=1);
 header('Content-Type: text/html; charset=UTF-8');
 
 /**
- * @return array<int, array<string, string>>
+ * Читает записи анекдотов из файла в формате JSONL.
+ *
+ * @return array<int, array<string, mixed>>
  */
 function readJokesFromFile(string $filename): array
 {
@@ -29,8 +31,10 @@ function readJokesFromFile(string $filename): array
 }
 
 /**
- * @param array<int, array<string, string>> $jokes
- * @return array<int, array<string, string>>
+ * Сортирует массив анекдотов по выбранному полю и направлению.
+ *
+ * @param array<int, array<string, mixed>> $jokes
+ * @return array<int, array<string, mixed>>
  */
 function sortJokes(array $jokes, string $sortBy, string $order): array
 {
@@ -58,6 +62,36 @@ function sortJokes(array $jokes, string $sortBy, string $order): array
 function e(?string $value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Преобразует теги к строке для безопасного отображения в таблице.
+ *
+ * @param mixed $tags
+ */
+function renderTags($tags): string
+{
+    if (is_array($tags)) {
+        $normalized = [];
+        foreach ($tags as $tag) {
+            if (!is_string($tag)) {
+                continue;
+            }
+
+            $trimmedTag = trim($tag);
+            if ($trimmedTag !== '') {
+                $normalized[] = $trimmedTag;
+            }
+        }
+
+        return implode(', ', $normalized);
+    }
+
+    if (is_string($tags)) {
+        return trim($tags);
+    }
+
+    return '';
 }
 
 function toggleOrder(string $currentOrder): string
@@ -208,7 +242,7 @@ $jokes = sortJokes($jokes, $sortBy, $order);
                     <td><?= e($joke['created_at'] ?? '') ?></td>
                     <td><?= e($joke['updated_at'] ?? '') ?></td>
                     <td><?= e($joke['rating'] ?? '') ?></td>
-                    <td><?= e($joke['tags'] ?? '') ?></td>
+                    <td><?= e(renderTags($joke['tags'] ?? [])) ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
