@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Каталог анекдотов{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f3f4f6, #dbeafe);
+            color: #1f2937;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+        .header { background: #5e5075; color: #fff; padding: 24px; }
+        .header h1 { margin: 0; font-size: 30px; }
+        .body { padding: 24px; }
+        .alert { border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; font-size: 14px; line-height: 1.45; }
+        .alert-success { background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; }
+        .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        .alert ul { margin: 8px 0 0; padding-left: 20px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { font-weight: bold; margin-bottom: 8px; color: #111827; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #f9fafb;
+        }
+        .input-error { border-color: #dc2626; background: #fff7f7; }
+        .field-error { margin-top: 6px; font-size: 12px; color: #b91c1c; }
+        textarea { min-height: 140px; resize: vertical; }
+        .hint { margin-top: 6px; font-size: 12px; color: #6b7280; }
+        .actions { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { display: inline-block; text-decoration: none; border: none; border-radius: 10px; padding: 12px 16px; font-size: 14px; font-weight: bold; }
+        .btn-primary { background: #5e5075; color: white; }
+        .btn-secondary { background: #e5e7eb; color: #111827; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #dcdcdc; padding: 10px; text-align: left; vertical-align: top; }
+        th { background: #f0f0f0; }
+        th a { color: #222; text-decoration: none; }
+        tr:nth-child(even) { background: #fafafa; }
+        .content-cell { max-width: 350px; white-space: pre-wrap; word-break: break-word; }
+        .empty { padding: 20px; background: #fff3cd; border: 1px solid #ffe69c; border-radius: 8px; color: #664d03; }
+        .sort-info { margin-bottom: 15px; color: #555; }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 24px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .actions { flex-direction: column; }
+            .btn { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>{% block heading %}Каталог анекдотов{% endblock %}</h1>
+    </div>
+    <div class="body">
+        {% block body %}{% endblock %}
+    </div>
+</div>
+</body>
+</html>

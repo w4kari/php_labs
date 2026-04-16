@@ -1,0 +1,50 @@
+﻿{% extends "layout.twig" %}
+
+{% block title %}Список анекдотов (Twig){% endblock %}
+{% block heading %}Каталог анекдотов (Twig){% endblock %}
+
+{% block body %}
+    <div class="actions">
+        <a href="index.php" class="btn btn-primary">Добавить анекдот (PHP)</a>
+        <a href="index_twig.php" class="btn btn-primary">Добавить анекдот (Twig)</a>
+    </div>
+
+    <p class="sort-info">
+        Текущая сортировка: <strong>{{ sortBy }}</strong>, порядок: <strong>{{ order }}</strong>
+    </p>
+
+    {% if jokes is empty %}
+        <div class="empty">Пока нет сохраненных анекдотов.</div>
+    {% else %}
+        <table>
+            <thead>
+            <tr>
+                <th><a href="?sort=title&order={{ nextOrder }}">Название</a></th>
+                <th><a href="?sort=category&order={{ nextOrder }}">Категория</a></th>
+                <th>Текст</th>
+                <th><a href="?sort=author&order={{ nextOrder }}">Автор</a></th>
+                <th><a href="?sort=publish_date&order={{ nextOrder }}">Публикация</a></th>
+                <th><a href="?sort=created_at&order={{ nextOrder }}">Создание</a></th>
+                <th><a href="?sort=updated_at&order={{ nextOrder }}">Обновление</a></th>
+                <th><a href="?sort=rating&order={{ nextOrder }}">Рейтинг</a></th>
+                <th>Теги</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for joke in jokes %}
+                <tr>
+                    <td>{{ joke.title|default('') }}</td>
+                    <td>{{ joke.category|default('') }}</td>
+                    <td class="content-cell">{{ joke.content|default('') }}</td>
+                    <td>{{ joke.author|default('') }}</td>
+                    <td>{{ joke.publish_date|default('') }}</td>
+                    <td>{{ joke.created_at|default('') }}</td>
+                    <td>{{ joke.updated_at|default('')|human_date }}</td>
+                    <td>{{ joke.rating|default('') }}</td>
+                    <td>{{ joke.tags is iterable ? joke.tags|join(', ') : joke.tags|default('') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

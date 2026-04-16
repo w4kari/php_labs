@@ -1,0 +1,104 @@
+﻿{% extends "layout.twig" %}
+
+{% block title %}Форма добавления анекдота (Twig){% endblock %}
+{% block heading %}Каталог анекдотов (Twig){% endblock %}
+
+{% block body %}
+    {% if successMessage %}
+        <div class="alert alert-success">{{ successMessage }}</div>
+    {% endif %}
+
+    {% if errors._form is defined and errors._form is not empty %}
+        <div class="alert alert-error">
+            <ul>
+                {% for error in errors._form %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form action="" method="POST" novalidate>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="title">Название анекдота</label>
+                <input type="text" id="title" name="title" required minlength="3" maxlength="100" value="{{ formData.title }}" class="{{ errors.title is defined and errors.title is not empty ? 'input-error' : '' }}">
+                {% if errors.title is defined and errors.title is not empty %}
+                    {% for error in errors.title %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="author">Автор / источник</label>
+                <input type="text" id="author" name="author" required minlength="2" maxlength="100" value="{{ formData.author }}" class="{{ errors.author is defined and errors.author is not empty ? 'input-error' : '' }}">
+                {% if errors.author is defined and errors.author is not empty %}
+                    {% for error in errors.author %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-group full-width">
+                <label for="content">Текст анекдота</label>
+                <textarea id="content" name="content" required minlength="10" maxlength="2000" class="{{ errors.content is defined and errors.content is not empty ? 'input-error' : '' }}">{{ formData.content }}</textarea>
+                {% if errors.content is defined and errors.content is not empty %}
+                    {% for error in errors.content %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="category">Категория</label>
+                <select id="category" name="category" required class="{{ errors.category is defined and errors.category is not empty ? 'input-error' : '' }}">
+                    <option value="">Выберите категорию</option>
+                    {% for value, label in categories %}
+                        <option value="{{ value }}" {{ formData.category == value ? 'selected' : '' }}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Возрастной рейтинг</label>
+                <select id="rating" name="rating" required class="{{ errors.rating is defined and errors.rating is not empty ? 'input-error' : '' }}">
+                    <option value="">Выберите рейтинг</option>
+                    {% for rating in ratings %}
+                        <option value="{{ rating }}" {{ formData.rating == rating ? 'selected' : '' }}>{{ rating }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="publish_date">Дата публикации</label>
+                <input type="date" id="publish_date" name="publish_date" required value="{{ formData.publish_date }}" class="{{ errors.publish_date is defined and errors.publish_date is not empty ? 'input-error' : '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="created_at">Дата создания записи</label>
+                <input type="date" id="created_at" name="created_at" required value="{{ formData.created_at }}" class="{{ errors.created_at is defined and errors.created_at is not empty ? 'input-error' : '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="updated_at">Дата обновления</label>
+                <input type="date" id="updated_at" name="updated_at" required value="{{ formData.updated_at }}" class="{{ errors.updated_at is defined and errors.updated_at is not empty ? 'input-error' : '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="tags">Теги</label>
+                {% for tag in formData.tags %}
+                    <input type="text" name="tags[]" maxlength="150" value="{{ tag }}" style="{{ loop.index0 > 0 ? 'margin-top: 8px;' : '' }}">
+                {% endfor %}
+                <div class="hint">Каждый тег передается отдельным элементом массива tags[].</div>
+            </div>
+        </div>
+
+        <div class="actions" style="margin-top: 24px;">
+            <button type="submit" class="btn btn-primary">Сохранить анекдот</button>
+            <a href="index.php" class="btn btn-primary">Добавить анекдот (PHP)</a>
+            <a href="list_jokes.php" class="btn btn-secondary">Каталог (PHP)</a>
+            <a href="list_jokes_twig.php" class="btn btn-secondary">Каталог (Twig)</a>
+        </div>
+    </form>
+{% endblock %}
